@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sujaygouda M.H. | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #00ff41; --green-dim: #00b32d; --green-dark: #003d0f;
+    --bg: #020a02; --bg2: #051005;
+    --amber: #ffb000; --red: #ff3c3c; --cyan: #00ffcc; --white: #e0ffe0;
+  }
+  html, body { height: 100%; background: var(--bg); color: var(--green); font-family: 'Share Tech Mono', monospace; font-size: 15px; line-height: 1.6; overflow: hidden; }
+  body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px); pointer-events:none; z-index:9999; }
+  body::after { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,0.5) 100%); pointer-events:none; z-index:9998; animation:flicker 8s infinite; }
+  @keyframes flicker { 0%,97%,100%{opacity:1} 98%{opacity:0.92} 99%{opacity:0.97} }
+
+  #terminal { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+  #titlebar { background:var(--green-dark); border-bottom:1px solid var(--green-dim); padding:6px 20px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.red{background:var(--red)} .dot.amber{background:var(--amber)} .dot.green{background:var(--green)}
+  #titlebar span { margin:0 auto; font-size:13px; color:var(--green-dim); letter-spacing:2px; }
+  #output { flex:1; overflow-y:auto; padding:20px 28px; scroll-behavior:smooth; }
+  #output::-webkit-scrollbar{width:6px} #output::-webkit-scrollbar-track{background:var(--bg)} #output::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:3px}
+  #input-row { display:flex; align-items:center; padding:10px 28px 16px; border-top:1px solid var(--green-dark); flex-shrink:0; gap:8px; }
+  #prompt-label { color:var(--green-dim); white-space:nowrap; font-size:14px; }
+  #prompt-label .user{color:var(--cyan)} #prompt-label .host{color:var(--green)} #prompt-label .dollar{color:var(--amber)}
+  #cmd-input { flex:1; background:transparent; border:none; outline:none; color:var(--green); font-family:'Share Tech Mono',monospace; font-size:15px; caret-color:var(--green); }
+
+  .line{margin-bottom:2px} .line.cmd{color:var(--white)} .line.cmd .u{color:var(--cyan)} .line.cmd .h{color:var(--green)} .line.cmd .d{color:var(--amber)}
+  .line.error{color:var(--red)} .line.success{color:var(--green)} .line.muted{color:var(--green-dim)} .line.highlight{color:var(--amber)} .line.info{color:var(--cyan)} .line.blank{height:10px}
+  .section-header{color:var(--amber);border-bottom:1px solid var(--green-dark);padding-bottom:4px;margin:8px 0 12px;letter-spacing:3px;font-size:14px}
+  .tag{display:inline-block;border:1px solid var(--green-dim);padding:1px 8px;margin:2px;border-radius:2px;font-size:12px;color:var(--green-dim)}
+  .tag.hot{border-color:var(--amber);color:var(--amber)} .tag.info{border-color:var(--cyan);color:var(--cyan)}
+  .project-card{border:1px solid var(--green-dark);padding:12px 16px;margin:8px 0;background:var(--bg2)}
+  .project-card .title{color:var(--amber);font-size:16px} .project-card .desc{color:var(--green-dim);margin:4px 0;font-size:13px} .project-card .link{color:var(--cyan);font-size:13px}
+  .exp-row{margin:8px 0 14px} .exp-row .role{color:var(--amber)} .exp-row .company{color:var(--cyan)} .exp-row .period{color:var(--green-dim);font-size:13px}
+  .exp-row ul{margin-top:6px;padding-left:0;list-style:none} .exp-row ul li{color:var(--green-dim);font-size:13px;margin-bottom:3px} .exp-row ul li::before{content:'▸ ';color:var(--amber)}
+  .bar-wrap{margin:3px 0;display:flex;align-items:center;gap:12px}
+  .bar-label{width:140px;font-size:13px;color:var(--green-dim)} .bar-track{flex:1;background:var(--green-dark);height:8px;border-radius:2px;overflow:hidden} .bar-fill{height:100%;background:var(--green);border-radius:2px} .bar-pct{font-size:12px;color:var(--green-dim);width:36px}
+  .contact-row{display:flex;gap:8px;align-items:center;margin:5px 0} .contact-row .icon{color:var(--amber);width:20px} .contact-row a{color:var(--cyan);text-decoration:none} .contact-row a:hover{text-decoration:underline}
+  .cert-row{color:var(--green-dim);margin:3px 0;font-size:13px} .cert-row::before{content:'◈ ';color:var(--amber)}
+
+  #boot { position:fixed; inset:0; background:var(--bg); z-index:1000; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:40px 60px; font-family:'Share Tech Mono',monospace; color:var(--green); font-size:14px; }
+  #boot pre{color:var(--green);font-size:11px;line-height:1.25;margin-bottom:24px}
+  #boot-lines{line-height:1.8} .boot-line{display:block} .ok{color:var(--green)} .warn{color:var(--amber)} .boot-dim{color:var(--green-dark)}
+  #boot-progress{margin-top:30px;width:300px;height:4px;background:var(--green-dark);border-radius:2px;overflow:hidden}
+  #boot-bar{height:100%;width:0%;background:var(--green);transition:width 0.1s linear}
+  #boot.hide{animation:fadeout 0.5s ease forwards} @keyframes fadeout{to{opacity:0;pointer-events:none}}
+</style>
+</head>
+<body>
+
+<div id="boot">
+<pre>
+  ███████╗██╗   ██╗      ██╗ █████╗ ██╗   ██╗
+  ██╔════╝██║   ██║      ██║██╔══██╗╚██╗ ██╔╝
+  ███████╗██║   ██║      ██║███████║ ╚████╔╝
+  ╚════██║██║   ██║ ██   ██║██╔══██║  ╚██╔╝
+  ███████║╚██████╔╝ ╚█████╔╝██║  ██║   ██║
+  ╚══════╝ ╚═════╝   ╚════╝ ╚═╝  ╚═╝   ╚═╝</pre>
+  <div id="boot-lines"></div>
+  <div id="boot-progress"><div id="boot-bar"></div></div>
+</div>
+
+<div id="terminal" style="display:none">
+  <div id="titlebar">
+    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+    <span>visitor@sujaymh.dev — bash — 80×24</span>
+  </div>
+  <div id="output"></div>
+  <div id="input-row">
+    <div id="prompt-label"><span class="user">visitor</span>@<span class="host">sujaymh.dev</span><span class="dollar"> $ </span></div>
+    <input id="cmd-input" type="text" autocomplete="off" autocorrect="off" spellcheck="false" autofocus placeholder="type 'help' for commands..." />
+  </div>
+</div>
+
+<script>
+const D = {
+  name:"Sujaygouda M.H.", role:"Embedded Systems & Firmware Engineer",
+  location:"Hubli, Karnataka, India", phone:"+91 7204765714",
+  email:"sujaygoudamh207@gmail.com", linkedin:"linkedin.com/in/sujaymh27", github:"github.com/sujaygouda123",
+  about:[
+    "Hey, I'm Sujay — a final-year ECE student and",
+    "embedded systems enthusiast from Hubli, India.",
+    "",
+    "I work at the intersection of hardware and software:",
+    "from PCB schematics to production-ready firmware.",
+    "Currently building a three-phase BLDC ESC for an",
+    "Agri-tech startup using STM32 and power electronics.",
+    "",
+    "I love taking hardware from zero to working prototype,",
+    "debugging circuits at 2AM, and writing tight C code",
+    "that runs reliably in the real world."
+  ],
+  skills:{
+    "Languages":       [["Embedded C",92],["C / C++",88],["Python",72],["C#",65],["Verilog",60]],
+    "Microcontrollers":[["STM32 Cortex-M4",90],["ESP32",88],["Arduino",90],["Raspberry Pi",82],["ARM Cortex-M",78]],
+    "Motor & Power":   [["BLDC ESC Design",88],["PWM Generation",90],["N-ch MOSFET",85],["DRV8328C",80]],
+    "Protocols":       [["UART / SPI / I2C",90],["CAN / USB",75],["Wi-Fi / Ethernet",80]],
+    "Tools":           [["STM32CubeIDE",88],["KiCad PCB",82],["Git",80],["OpenCV",72],[".NET / Angular",65]]
+  },
+  projects:[
+    {name:"Vision-Based Lane Following Vehicle",
+     desc:"Autonomous vehicle using Raspberry Pi + OpenCV achieving reliable lane detection and STOP-sign recognition at 30 FPS. Priority-based decision engine for simultaneous lane tracking, obstacle avoidance, and sign response.",
+     stack:["OpenCV","Raspberry Pi 4","Arduino","C++","Embedded C","L298N"],
+     link:"github.com/sujaygouda123/vision-based-lane-following-vehicle",period:"Aug–Dec 2025",status:"active"},
+    {name:"IoT Patient Monitoring System",
+     desc:"Wireless health monitor on ESP32 streaming SpO2, heart rate, and temperature to Blynk dashboard in real time. Threshold-based remote alerts for abnormal readings.",
+     stack:["ESP32","MAX30102","DHT22","DS18B20","Blynk","Embedded C"],
+     link:"github.com/sujaygouda123/IOT-BASED-PATIENT-MONITORING-SYSTEM",period:"Jan–Feb 2025",status:"complete"},
+    {name:"Gesture-Controlled Robotic Vehicle",
+     desc:"Hand-gesture robot using MPU6050 accelerometer/gyroscope. Wrist tilt angles mapped to directional commands over Wi-Fi. Sub-100ms control latency via optimized I2C polling + UDP.",
+     stack:["ESP32","MPU6050 IMU","Embedded C","Wi-Fi","UDP"],
+     link:"github.com/sujaygouda123/Gesture-control-car-using-esp32",period:"Aug–Dec 2024",status:"complete"}
+  ],
+  experience:[
+    {role:"R&D Firmware & Hardware Design Intern",company:"NeoKisan Innovation Pvt Ltd",sector:"Agri-Tech",period:"Jan 2026 – Present",
+     bullets:["Designed three-phase BLDC ESC for electric shear cutter using STM32F4 + DRV8328C gate driver with sensorless commutation.","Engineered motor power stage with N-channel MOSFETs optimized for 50A high-current loads.","Developed firmware in Embedded C for 6-step PWM commutation and closed-loop speed control.","Built real-time force acquisition system using HX711 ADC + load cell + IMU for agricultural tool analysis.","Full HW lifecycle: PCB routing in KiCad, bring-up testing, debugging, field prototype validation."]},
+    {role:"Software Development Intern",company:"Keabis Technologies",sector:"Enterprise SaaS",period:"Mar 2026 – Present",
+     bullets:["Contributed to Keabis Onboarding — a full-stack HR application built with C# .NET, Angular, and SQL Server.","Designed SQL Server schemas and stored procedures for onboarding master data modules.","Built C# domain entities and service layers following clean architecture with EF Core.","Worked full-stack: Angular front-end components + .NET Web API backend services."]}
+  ],
+  education:[
+    {inst:"KLE Institute of Technology, Hubli",degree:"B.E. Electronics & Communication Engineering",score:"CGPA: 7.64",year:"Expected Jun 2026"},
+    {inst:"Dr. R. B. Patil Mahesh PU College, Hubli",degree:"Pre-University (PCMB)",score:"87.83%",year:"Aug 2022"},
+    {inst:"R. N. S. Vidyaniketan School, Hubli",degree:"Secondary (10th)",score:"91.04%",year:"Jul 2020"}
+  ],
+  certs:["Internet of Things (IoT) — Samsung Innovation Campus","Embedded Systems & ARM Cortex-M — Udemy","VLSI Design Fundamentals — 1stop"],
+  leadership:["Phoenix Coordinator, KLE IT — Organized skill dev programs, technical quizzes & events for 100+ participants.","Youth for Seva (Scholarship Holder) — Volunteered in education outreach and community service."]
+};
+
+const out=document.getElementById('output'),inp=document.getElementById('cmd-input');
+let hist=[],hIdx=-1;
+
+function addRaw(html,delay=0){return new Promise(r=>setTimeout(()=>{const d=document.createElement('div');d.innerHTML=html;out.appendChild(d);out.scrollTop=out.scrollHeight;r()},delay));}
+const ln=(t='',c='')=>`<div class="line ${c}">${t}</div>`;
+const bl=()=>'<div class="line blank"></div>';
+const hdr=t=>`<div class="section-header">// ${t.toUpperCase()}</div>`;
+async function pl(lines,bd=0,step=16){for(let i=0;i<lines.length;i++)await addRaw(lines[i],bd+i*step);return new Promise(r=>setTimeout(r,bd+lines.length*step));}
+const bars=items=>items.map(([l,p])=>`<div class="bar-wrap"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${p}%"></div></div><div class="bar-pct">${p}%</div></div>`).join('');
+
+const cmds={
+  help:()=>pl([bl(),ln('╔══════════════════════════════════════════════╗','muted'),ln('║            AVAILABLE COMMANDS                ║','muted'),ln('╚══════════════════════════════════════════════╝','muted'),bl(),ln('  <span class="highlight">about</span>        — who am I?','success'),ln('  <span class="highlight">skills</span>       — tech stack & proficiency','success'),ln('  <span class="highlight">projects</span>     — things I\'ve built','success'),ln('  <span class="highlight">experience</span>   — work history','success'),ln('  <span class="highlight">education</span>    — academic background','success'),ln('  <span class="highlight">contact</span>      — get in touch','success'),ln('  <span class="highlight">whoami</span>       — quick intro','success'),ln('  <span class="highlight">ls</span>           — list sections','success'),ln('  <span class="highlight">banner</span>       — show banner','success'),ln('  <span class="highlight">clear</span>        — clear terminal','success'),bl(),ln('Tip: Use ↑↓ arrow keys to navigate command history.','muted'),bl()]),
+
+  whoami:()=>pl([bl(),ln(`<span class="highlight">${D.name}</span> — ${D.role}`,''),ln(D.location,'muted'),bl(),ln('Final-year ECE · Embedded firmware dev','muted'),ln('STM32 · ESP32 · BLDC · PCB · IoT · OpenCV','muted'),bl()]),
+
+  about(){
+    const lines=[bl(),hdr('about me'),...D.about.map(l=>ln(l||'',l?'muted':'')),bl(),ln('[ currently open to full-time embedded / firmware roles ]','info'),bl()];
+    return pl(lines);
+  },
+
+  skills(){
+    const lines=[bl(),hdr('skills & proficiency')];
+    for(const[cat,items]of Object.entries(D.skills)){lines.push(ln(`<span class="highlight">${cat}</span>`,''));lines.push(bars(items));lines.push(bl());}
+    return pl(lines);
+  },
+
+  projects(){
+    const lines=[bl(),hdr('projects')];
+    for(const p of D.projects){
+      const sc=p.status==='active'?'hot':'info';
+      lines.push(`<div class="project-card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap"><span class="title">${p.name}</span><span class="tag ${sc}">${p.status}</span><span class="tag" style="margin-left:auto;font-size:11px">${p.period}</span></div><div class="desc">${p.desc}</div><div style="margin:6px 0">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div><div class="link">⌥ <a href="https://${p.link}" target="_blank">${p.link}</a></div></div>`);
+    }
+    lines.push(bl());
+    return pl(lines,0,50);
+  },
+
+  experience(){
+    const lines=[bl(),hdr('work experience')];
+    for(const e of D.experience){
+      lines.push(`<div class="exp-row"><div><span class="role">${e.role}</span> <span class="tag info">${e.sector}</span></div><div><span class="company">${e.company}</span> <span class="period">· ${e.period}</span></div><ul>${e.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div>`);
+    }
+    lines.push(bl());
+    return pl(lines,0,55);
+  },
+
+  education(){
+    const lines=[bl(),hdr('education')];
+    for(const e of D.education){lines.push(`<div class="exp-row"><div class="role">${e.inst}</div><div class="company">${e.degree}</div><div class="period">${e.score} · ${e.year}</div></div>`);}
+    lines.push(bl(),ln('certifications','highlight'));
+    for(const c of D.certs)lines.push(`<div class="cert-row">${c}</div>`);
+    lines.push(bl(),ln('leadership & community','highlight'));
+    for(const l of D.leadership)lines.push(`<div class="cert-row">${l}</div>`);
+    lines.push(bl());
+    return pl(lines,0,40);
+  },
+
+  contact:()=>pl([bl(),hdr('contact'),`<div class="contact-row"><span class="icon">✉</span><a href="mailto:${D.email}">${D.email}</a></div>`,`<div class="contact-row"><span class="icon">☏</span><span style="color:var(--green-dim)">${D.phone}</span></div>`,`<div class="contact-row"><span class="icon">⌥</span><a href="https://${D.github}" target="_blank">${D.github}</a></div>`,`<div class="contact-row"><span class="icon">❯</span><a href="https://${D.linkedin}" target="_blank">${D.linkedin}</a></div>`,bl(),ln('Open to full-time embedded systems &','muted'),ln('firmware engineering roles. Let\'s build.','muted'),bl()]),
+
+  ls:()=>pl([bl(),ln('drwxr-xr-x  <span class="highlight">about</span>','muted'),ln('drwxr-xr-x  <span class="highlight">skills</span>','muted'),ln('drwxr-xr-x  <span class="highlight">projects</span>','muted'),ln('drwxr-xr-x  <span class="highlight">experience</span>','muted'),ln('drwxr-xr-x  <span class="highlight">education</span>','muted'),ln('drwxr-xr-x  <span class="highlight">contact</span>','muted'),bl()]),
+
+  banner:()=>pl([bl(),`<pre style="color:var(--green);font-size:11px;line-height:1.25;margin:8px 0">
+  ███████╗██╗   ██╗      ██╗ █████╗ ██╗   ██╗
+  ██╔════╝██║   ██║      ██║██╔══██╗╚██╗ ██╔╝
+  ███████╗██║   ██║      ██║███████║ ╚████╔╝
+  ╚════██║██║   ██║ ██   ██║██╔══██║  ╚██╔╝
+  ███████║╚██████╔╝ ╚█████╔╝██║  ██║   ██║
+  ╚══════╝ ╚═════╝   ╚════╝ ╚═╝  ╚═╝   ╚═╝</pre>`,ln(`<span class="highlight">${D.name}</span> <span class="muted">|</span> ${D.role}`,''),ln(`${D.location}`,'muted'),ln('KLE Institute of Technology · B.E. ECE · Expected Jun 2026','muted'),bl(),ln('[ STM32 · ESP32 · BLDC · PCB · OpenCV · IoT · .NET · Angular ]','info'),bl(),ln('Type <span class="highlight">help</span> to explore. Type <span class="highlight">about</span> to start.','muted'),bl()]),
+
+  clear(){out.innerHTML='';return Promise.resolve();}
+};
+
+function escH(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function run(cmd){
+  const t=cmd.trim().toLowerCase();
+  await addRaw(`<div class="line cmd"><span><span class="u">visitor</span>@<span class="h">sujaymh.dev</span><span class="d"> $ </span></span>${escH(cmd)}</div>`);
+  if(!t)return;
+  if(cmds[t])await cmds[t]();
+  else{await addRaw(ln(`bash: ${escH(t)}: command not found. Try <span class="highlight">help</span>.`,'error'));await addRaw(bl());}
+}
+
+inp.addEventListener('keydown',async e=>{
+  if(e.key==='Enter'){const v=inp.value;inp.value='';if(v.trim()){hist.unshift(v);hIdx=-1;}inp.disabled=true;await run(v);inp.disabled=false;inp.focus();}
+  else if(e.key==='ArrowUp'){e.preventDefault();if(hIdx<hist.length-1){hIdx++;inp.value=hist[hIdx];}}
+  else if(e.key==='ArrowDown'){e.preventDefault();if(hIdx>0){hIdx--;inp.value=hist[hIdx];}else{hIdx=-1;inp.value='';}}
+});
+document.getElementById('terminal').addEventListener('click',()=>inp.focus());
+
+async function boot(){
+  const bl2=document.getElementById('boot-lines'),bar=document.getElementById('boot-bar'),bEl=document.getElementById('boot');
+  const msgs=[['Initializing BIOS v3.1.0 — STM32 platform','boot-dim',8],['CPU: ARM Cortex-M4 @ 168MHz — detected','boot-dim',20],['MEM: Flash 1MB / SRAM 192KB — OK','ok',32],['UART / SPI / I2C / CAN — initialized','ok',45],['Mounting embedded filesystem...','boot-dim',58],['Loading firmware modules...','boot-dim',68],['PWM timers + gate drivers configured — OK','ok',78],['Network interface — UP','ok',86],['Loading portfolio.sh...','warn',94],['All systems nominal — READY','ok',100]];
+  for(const[msg,cls,pct]of msgs){await new Promise(r=>setTimeout(r,180));const s=document.createElement('span');s.className=`boot-line ${cls}`;s.textContent=msg;bl2.appendChild(s);bar.style.width=pct+'%';}
+  await new Promise(r=>setTimeout(r,400));
+  bEl.classList.add('hide');
+  await new Promise(r=>setTimeout(r,500));
+  document.getElementById('terminal').style.display='flex';
+  await cmds.banner();
+  inp.focus();
+}
+boot();
+</script>
+</body>
+</html>
